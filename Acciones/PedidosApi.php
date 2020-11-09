@@ -1,6 +1,8 @@
   
 <?php
 include  "Direcciones.php";
+// include  "ClienteApi.php";
+
 
 class PedidosApi{        
 
@@ -22,10 +24,15 @@ class PedidosApi{
 
                 for($i= 0; $i<count($array);$i++){
                     if($array[$i]["estado"] == "POSTEADO"){
+                        echo count($array);
                             $DireccionOrigen = json_decode(Direcciones::TraerDireccionById($array[$i]["DireccionOrigen"]),true);
                             $DireccionDestino = json_decode(Direcciones::TraerDireccionById($array[$i]["DireccionLlegada"]),true);
                             $array[$i]["DireccionOrigen"] =   $DireccionOrigen ;
                             $array[$i]["DireccionLlegada"] =  $DireccionDestino;
+                            $clienteInfo = json_decode(ClienteApi::TraerClientePorId($array[$i]["idCliente"]),true);
+                            $array[$i]["clienteInfo"] = $clienteInfo;
+                            // echo "clienteInfo";
+                            // var_dump($clienteInfo);
                     }
                     else{
                         unset($array[$i]);

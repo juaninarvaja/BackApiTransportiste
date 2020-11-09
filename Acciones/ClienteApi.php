@@ -13,6 +13,14 @@
             return json_encode($resultado->fetch(PDO::FETCH_ASSOC));
 
         }
+        public function TraerClientePorId($id) {
+            $query="SELECT * FROM `clientes` WHERE id = $id";
+
+            $resultado=metodoGet($query);
+            header("HTTP/1.1 200 OK");
+            return json_encode($resultado->fetch(PDO::FETCH_ASSOC));
+
+        }
 
     }
     ?>
