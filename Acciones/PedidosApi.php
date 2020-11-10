@@ -20,27 +20,28 @@ class PedidosApi{
                 $resultado=metodoGet($query);
                 $JsonRta = json_encode($resultado->fetchAll());
                 $array = json_decode($JsonRta,true);
-          
+                $auxArray = array();
 
                 for($i= 0; $i<count($array);$i++){
+                    
                     if($array[$i]["estado"] == "POSTEADO"){
-                        echo count($array);
+           
+                        // echo count($array);
                             $DireccionOrigen = json_decode(Direcciones::TraerDireccionById($array[$i]["DireccionOrigen"]),true);
                             $DireccionDestino = json_decode(Direcciones::TraerDireccionById($array[$i]["DireccionLlegada"]),true);
                             $array[$i]["DireccionOrigen"] =   $DireccionOrigen ;
                             $array[$i]["DireccionLlegada"] =  $DireccionDestino;
                             $clienteInfo = json_decode(ClienteApi::TraerClientePorId($array[$i]["idCliente"]),true);
                             $array[$i]["clienteInfo"] = $clienteInfo;
+                            array_push($auxArray,$array[$i]);
                             // echo "clienteInfo";
                             // var_dump($clienteInfo);
                     }
-                    else{
-                        unset($array[$i]);
-                    }
-                    // var_dump($array[$i]);
+                   
                 }
-                //  var_dump($array);
-                  echo json_encode($array);
+                echo json_encode($auxArray);
+              
+                //   echo json_encode($array);
             }
             header("HTTP/1.1 200 OK");
             exit();
