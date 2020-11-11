@@ -49,7 +49,7 @@ class PedidosApi{
     }
     public function SubirUno($request, $response, $args){
             // if($_POST['METHOD']=='POST'){
-            unset($_POST['METHOD']);
+            unset($_POST['METHOD']); 
             // Direccion Origen;
                 $calleO = $_POST['calleOrigen'];
                 $CiudadO = $_POST['ciudadOrigen'];
@@ -58,36 +58,53 @@ class PedidosApi{
                 $CodigoPostO= $_POST['codigoPostalOrigen'];
                 $NumeracionO= $_POST['numeracionOrigen'];
                 $infoO = $_POST['infoOrigen'];
+                $idCliente = $_POST['idCliente'];
+                $existe = ClienteApi::TraerClientePorId($idCliente);
+                if(strcmp ($existe , "false" ) != 0){
+                   
+               
+                   
+                    $idDireccOrigen = Direcciones::SubirUnaDirecc($calleO, $CiudadO, $DepartamentoO,$ProvinciaO,$CodigoPostO,$NumeracionO,$infoO);
+                    //  echo "Direccion origen id:";
+                    //  echo (int)$idDireccOrigen;
+                // direccion Llegada
+                $calleD = $_POST['calleDestino'];
+                $CiudadD = $_POST['ciudadDestino'];
+                $DepartamentoD = $_POST['departamentoDestino'];
+                $ProvinciaD = $_POST['provinciaDestino'];
+                $CodigoPostD= $_POST['codigoPostalDestino'];
+                $NumeracionD= $_POST['numeracionDestino'];
+                $infoD = $_POST['infoDestino'];
+                $idDireccLlegada = (int)Direcciones::SubirUnaDirecc($calleD, $CiudadD, $DepartamentoD,$ProvinciaD,$CodigoPostD,$NumeracionD,$infoD);
+                // echo "Direccion llegada id:";
+                // echo $idDireccLlegada;
+                // //
+                $distancia = $_POST['distancia'];
+                $descripcion = $_POST['descripcion'];
+               
                 
-                $idDireccOrigen = Direcciones::SubirUnaDirecc($calleO, $CiudadO, $DepartamentoO,$ProvinciaO,$CodigoPostO,$NumeracionO,$infoO);
-                //  echo "Direccion origen id:";
-                //  echo (int)$idDireccOrigen;
-            // direccion Llegada
-            $calleD = $_POST['calleDestino'];
-            $CiudadD = $_POST['ciudadDestino'];
-            $DepartamentoD = $_POST['departamentoDestino'];
-            $ProvinciaD = $_POST['provinciaDestino'];
-            $CodigoPostD= $_POST['codigoPostalDestino'];
-            $NumeracionD= $_POST['numeracionDestino'];
-            $infoD = $_POST['infoDestino'];
-            $idDireccLlegada = (int)Direcciones::SubirUnaDirecc($calleD, $CiudadD, $DepartamentoD,$ProvinciaD,$CodigoPostD,$NumeracionD,$infoD);
-            // echo "Direccion llegada id:";
-            // echo $idDireccLlegada;
-            // //
-            $distancia = $_POST['distancia'];
-            $descripcion = $_POST['descripcion'];
-            $idCliente = $_POST['idCliente'];
-            
-            //insertar en estado POSTEADO (?)
-             $query="INSERT INTO `pedido` (`idCliente`, `DireccionLlegada`, `DireccionOrigen`,`PropuestasRecibidas`,`estado`, `Distancia`,`descripcion`)
-              VALUES ('$idCliente', '$idDireccLlegada','$idDireccOrigen','','POSTEADO', '$distancia', '$descripcion')";
-            //   echo $query;
-            $queryAutoIncrement="select MAX(idPedido) as id from pedido";
-            $resultado=metodoPost($query, $queryAutoIncrement);
-            
-            echo json_encode($resultado);
-            header("HTTP/1.1 200 OK");
-            exit();
+                //insertar en estado POSTEADO (?)
+                 $query="INSERT INTO `pedido` (`idCliente`, `DireccionLlegada`, `DireccionOrigen`,`PropuestasRecibidas`,`estado`, `Distancia`,`descripcion`)
+                  VALUES ('$idCliente', '$idDireccLlegada','$idDireccOrigen','','POSTEADO', '$distancia', '$descripcion')";
+                //   echo $query;
+                $queryAutoIncrement="select MAX(idPedido) as id from pedido";
+                $resultado=metodoPost($query, $queryAutoIncrement);
+                
+                echo json_encode($resultado);
+                //actualizer el array de pedidos de ese idCliente
+                ClienteApi::AgregarPedidoACliente($idCliente,$resultado["id"]);
+    
+                header("HTTP/1.1 200 OK");
+                exit();
+                }
+                else {
+                    echo "ese cliente no existe";
+                }
+
+        }
+
+        public function TraerUnobyIdPedido($id) {
+
         }
 //    public function ActualizarUno($request, $response, $args){
 //     //    echo("entro a actualizar uno");

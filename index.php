@@ -40,6 +40,11 @@ $app->group('/transp', function () {
     // $this->put('/', \UsuariosApi::class . ':ActualizarUno');
     // $this->post('/delete', \UsuariosApi::class . ':BorrarById');
 });
+$app->group('/cliente', function () {
+    // $this->get('/', \PedidosApi::class . ':TraerTodos');
+    $this->post('/mail', \ClienteApi::class . ':TraerPorMailPost');
+    $this->post('/id', \ClienteApi::class . ':TraerPorIdPost');
+});
 
 
 $app->run();
