@@ -2,6 +2,7 @@
 include 'BD/bd.php';
 include_once "Acciones/UsuariosApi.php";
 include_once "Acciones/PedidosApi.php";
+include_once "Acciones/PropuestaApi.php";
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -24,6 +25,14 @@ $app->group('/pedidos', function () {
     // $this->put('/', \UsuariosApi::class . ':ActualizarUno');
     // $this->post('/delete', \UsuariosApi::class . ':BorrarById');
 });
+$app->group('/propuesta', function () {
+    // $this->get('/', \PedidosApi::class . ':TraerTodos');
+    $this->post('/', \PropuestaApi::class . ':CotizarUno');
+
+    // $this->put('/', \UsuariosApi::class . ':ActualizarUno');
+    // $this->post('/delete', \UsuariosApi::class . ':BorrarById');
+});
+
 
 
 $app->run();

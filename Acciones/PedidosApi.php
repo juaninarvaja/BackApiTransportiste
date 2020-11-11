@@ -80,7 +80,7 @@ class PedidosApi{
             
             //insertar en estado POSTEADO (?)
              $query="INSERT INTO `pedido` (`idCliente`, `DireccionLlegada`, `DireccionOrigen`,`PropuestasRecibidas`,`estado`, `Distancia`,`descripcion`)
-              VALUES ('$idCliente', '$idDireccLlegada','$idDireccOrigen','[{}]','POSTEADO', '$distancia', '$descripcion')";
+              VALUES ('$idCliente', '$idDireccLlegada','$idDireccOrigen','','POSTEADO', '$distancia', '$descripcion')";
             //   echo $query;
             $queryAutoIncrement="select MAX(idPedido) as id from pedido";
             $resultado=metodoPost($query, $queryAutoIncrement);
@@ -116,6 +116,13 @@ class PedidosApi{
 //         exit();
 //     }
 //    }
+            public function existePedidoId($id) {
+                $query="SELECT `idPedido` FROM `pedido` WHERE idPedido = $id";
 
+                $resultado = metodoGet($query);
+                header("HTTP/1.1 200 OK");
+                return json_encode($resultado->fetch(PDO::FETCH_ASSOC));
+            
+            }
 }
 ?>
