@@ -104,35 +104,14 @@ class PedidosApi{
         }
 
         public function TraerUnobyIdPedido($id) {
+            $query="SELECT `idCliente`, `idPedido`, `DireccionLlegada`, `DireccionOrigen`, `PropuestasRecibidas`, `estado`, `Distancia`, `descripcion` FROM `pedido` WHERE idPedido = $id";
+
+            $resultado = metodoGet($query);
+            header("HTTP/1.1 200 OK");
+            return json_encode($resultado->fetch(PDO::FETCH_ASSOC));
 
         }
-//    public function ActualizarUno($request, $response, $args){
-//     //    echo("entro a actualizar uno");
-//          $data = $request->getParsedBody();
-//          $id = isset($data["idAuth"])?$data["idAuth"]:null;
-//          $tipouser= isset($data["tipoUsuario"])?$data["tipoUsuario"]:null;
-//          $mail= isset($data["email"])?$data["email"]:null;
-//          $contrasenia= isset($data["contrasenia"])?$data["contrasenia"]:null;
 
-//         $query = "UPDATE `usuarios` SET `tipoUsuario`= '$tipouser',`email`='$mail',`contrasenia`='$contrasenia' WHERE `idAuth`= $id";
-//         $resultado = metodoPut($query);
-//         echo json_encode($resultado);
-//         header("HTTP/1.1 200 OK");
-//         exit();
-//    }
-   
-//    public function BorrarById($request, $response, $args){
-     
-//     if($_POST['METHOD']=='DELETE'){
-//         unset($_POST['METHOD']);
-//         $id=$_POST['id'];
-//         $query="DELETE FROM usuarios WHERE idAuth='$id'";
-//         $resultado=metodoDelete($query);
-//         echo json_encode($resultado);
-//         header("HTTP/1.1 200 OK");
-//         exit();
-//     }
-//    }
             public function existePedidoId($id) {
                 $query="SELECT `idPedido` FROM `pedido` WHERE idPedido = $id";
 

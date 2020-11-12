@@ -34,16 +34,18 @@ $app->group('/propuesta', function () {
 });
 $app->group('/transp', function () {
     // $this->get('/', \PedidosApi::class . ':TraerTodos');
-    $this->post('/mail', \TransportistaApi::class . ':TraerPorMailPost');
-    $this->post('/id', \TransportistaApi::class . ':TraerPorIdPost');
+    $this->post('/mail/', \TransportistaApi::class . ':TraerPorMailPost');
+    $this->post('/id/', \TransportistaApi::class . ':TraerPorIdPost');
 
     // $this->put('/', \UsuariosApi::class . ':ActualizarUno');
     // $this->post('/delete', \UsuariosApi::class . ':BorrarById');
 });
 $app->group('/cliente', function () {
     // $this->get('/', \PedidosApi::class . ':TraerTodos');
-    $this->post('/mail', \ClienteApi::class . ':TraerPorMailPost');
-    $this->post('/id', \ClienteApi::class . ':TraerPorIdPost');
+    $this->post('/mail/', \ClienteApi::class . ':TraerPorMailPost');
+    $this->post('/id/', \ClienteApi::class . ':TraerPorIdPost');
+    $this->post('/pedidos/', \ClienteApi::class . ':getClienteConPedidosbyEmail');
+    
 });
 
 

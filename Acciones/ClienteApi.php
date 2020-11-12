@@ -44,9 +44,74 @@
             }
         }
         public function AgregarPedidoACliente($idCliente, $idPedido) {
-            // echo "data dentro de function";
-            // echo $idCliente;
-            // echo $idPedido;
+
+            $respuesta = ClienteApi::getArrayPedidosRealizados($idCliente);
+            array_push($respuesta,$idPedido);
+            $auxStringData = implode(",",$respuesta);
+
+            //echo $auxStringData;
+            $query2 = "UPDATE `clientes` SET `pedidos`= '$auxStringData'  WHERE id = $idCliente"; 
+            $resultado2 =  metodoPut($query2);
+            // exit(true);
+        }
+        public function getArrayPedidosRealizados($idCliente){
+            // $idint = intval($idPedido);
+            // echo $idint;
+            $query = "SELECT `pedidos` FROM `clientes` WHERE `id` = $idCliente";
+            $resultado = metodoGet($query);
+            header("HTTP/1.1 200 OK");
+
+            $unformatArray = $resultado->fetch(PDO::FETCH_ASSOC);
+  
+            $array = ClienteApi::FormatArray($unformatArray);
+            return $array;
+
+        } 
+        public function FormatArray($stringInfo){
+            // var_dump($stringInfo);
+            $stringInfo["pedidos"];
+                $arrayFormat = explode(",", $stringInfo["pedidos"]);
+                return $arrayFormat;
+        }     
+
+
+        public function getClienteConPedidosbyEmail($request, $response, $args){
+            if(isset($_POST['mail'])){
+                $mail=$_POST['mail'];
+                $rta =ClienteApi::TraerClientePorMail($mail);
+                
+                if(strcmp ($rta , "false" ) != 0){
+                    $rtaJson = json_decode($rta);
+                     $idCLI = (int)$rtaJson->id;
+                    
+                     $pedidos = ClienteApi::getArrayPedidosRealizados(($idCLI));
+                    //  var_dump($pedidos);
+                    //  var_dump(count($pedidos));
+                    $pedidosCliente = [];
+                     for($i=1;$i<count($pedidos);$i++){
+                         
+                         $rta2 = PedidosApi::TraerUnobyIdPedido($pedidos[$i]);
+                           array_push($pedidosCliente,json_decode($rta2)); 
+                    //    var_dump(json_decode($rta));
+                        //  array_push($pedidos,$rta); 
+                        // var_dump($pedidos);
+                        //  var_dump(json_decode($rta));
+                     }
+                     $rtaJson->pedidosCliente = $pedidosCliente;
+
+                    //  var_dump($pedidosCliente);
+                    //  var_dump($rtaJson);}
+                     echo json_encode($rtaJson);
+                }   
+                else {
+                    echo "No existe ese email";
+                 }
+                
+            }
+            else{
+                echo "no tiene mail para valdiar";
+            }
+
         }
 
     }
