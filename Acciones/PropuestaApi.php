@@ -63,6 +63,19 @@
                 return json_encode($resultado->fetch(PDO::FETCH_ASSOC));
               
             }
+            public function traerPropuestasIdPedido($id) {
+                $query="SELECT * FROM `propuesta` WHERE idPedido = $id";
+                
+                $resultado = metodoGet($query);
+                
+                $JsonRta = json_encode($resultado->fetchAll());
+                // $array = json_decode($JsonRta,true);
+          
+                header("HTTP/1.1 200 OK");
+                return $JsonRta;
+              
+            }
+
 
             public function getArrayPropuestasRecibidas($idPedido){
                 // $idint = intval($idPedido);

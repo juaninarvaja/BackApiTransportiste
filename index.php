@@ -22,6 +22,8 @@ $app->group('/usuarios', function () {
 $app->group('/pedidos', function () {
     $this->get('/', \PedidosApi::class . ':TraerTodos');
     $this->post('/', \PedidosApi::class . ':SubirUno');
+    $this->post('/propuestas/', \PedidosApi::class . ':TraerPedidosConSusPropuestas');
+
     // $this->put('/', \UsuariosApi::class . ':ActualizarUno');
     // $this->post('/delete', \UsuariosApi::class . ':BorrarById');
 });

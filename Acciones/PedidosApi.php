@@ -103,22 +103,47 @@ class PedidosApi{
 
         }
 
-        public function TraerUnobyIdPedido($id) {
-            $query="SELECT `idCliente`, `idPedido`, `DireccionLlegada`, `DireccionOrigen`, `PropuestasRecibidas`, `estado`, `Distancia`, `descripcion` FROM `pedido` WHERE idPedido = $id";
 
-            $resultado = metodoGet($query);
-            header("HTTP/1.1 200 OK");
-            return json_encode($resultado->fetch(PDO::FETCH_ASSOC));
+            public function TraerPedidosConSusPropuestas($request, $response, $args){
+                if(isset($_POST["idPedido"])){
+                    $idPedido = $_POST['idPedido'];
+                    // echo $idPedido;
+                    $rta =PedidosAPi::TraerUnobyIdPedido($idPedido);
+                    
+                    if(strcmp ($rta , "false" ) != 0){
+                        $propuestas = PropuestaApi::traerPropuestasIdPedido($idPedido);
+                        echo ($propuestas);
+                    }
+                    else{
+                        echo "no existe ese idPedido";
+                    }
+                   
+                }else{
+                    echo "no mandaste el idPedido";
+                }
 
-        }
+            }
 
-            public function existePedidoId($id) {
-                $query="SELECT `idPedido` FROM `pedido` WHERE idPedido = $id";
-
+            public function TraerUnobyIdPedido($id) {
+                $query="SELECT `idCliente`, `idPedido`, `DireccionLlegada`, `DireccionOrigen`, `PropuestasRecibidas`, `estado`, `Distancia`, `descripcion` FROM `pedido` WHERE idPedido = $id";
+    
                 $resultado = metodoGet($query);
                 header("HTTP/1.1 200 OK");
                 return json_encode($resultado->fetch(PDO::FETCH_ASSOC));
-            
+    
             }
+
+            
+            
+    
+                public function existePedidoId($id) {
+                    $query="SELECT `idPedido` FROM `pedido` WHERE idPedido = $id";
+    
+                    $resultado = metodoGet($query);
+                    header("HTTP/1.1 200 OK");
+                    return json_encode($resultado->fetch(PDO::FETCH_ASSOC));
+                
+                }
+    
 }
 ?>

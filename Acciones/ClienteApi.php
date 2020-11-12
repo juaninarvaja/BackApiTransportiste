@@ -92,10 +92,7 @@
                          
                          $rta2 = PedidosApi::TraerUnobyIdPedido($pedidos[$i]);
                            array_push($pedidosCliente,json_decode($rta2)); 
-                    //    var_dump(json_decode($rta));
-                        //  array_push($pedidos,$rta); 
-                        // var_dump($pedidos);
-                        //  var_dump(json_decode($rta));
+
                      }
                      $rtaJson->pedidosCliente = $pedidosCliente;
 
