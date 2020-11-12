@@ -91,7 +91,16 @@
                      for($i=1;$i<count($pedidos);$i++){
                          
                          $rta2 = PedidosApi::TraerUnobyIdPedido($pedidos[$i]);
-                           array_push($pedidosCliente,json_decode($rta2)); 
+                         $aux = json_decode($rta2, true);
+                        //  var_dump($aux["DireccionLlegada"]);
+                        //  var_dump((int)$aux->DireccionOrigen);
+                         $dataDireccLLegada = json_decode(Direcciones::TraerDireccionbyId((int)$aux["DireccionLlegada"]),true);
+                         $dataDireccOrigen = json_decode(Direcciones::TraerDireccionbyId((int)$aux["DireccionOrigen"]),true);
+                         // var_dump($aux);
+                        //  var_dump($dataDireccLLegada);
+                         $aux["DireccionLlegadaInfo"] = $dataDireccLLegada;
+                         $aux["DireccionOrigenInfo"] = $dataDireccOrigen;
+                           array_push($pedidosCliente,$aux); 
 
                      }
                      $rtaJson->pedidosCliente = $pedidosCliente;
