@@ -13,7 +13,7 @@
                 $precio=$_POST['Precio'];
                 $informacion = $_POST['informacion'];
 
-                // $rta = PropuestaApi::existePropuestaId($idPedido);
+           
                 $rta = PedidosApi::existePedidoId($idPedido);
                 if($rta!="false"){
                     //aca tengo q validar q el idTransportista esta bien
@@ -55,7 +55,7 @@
               
              
          }
-            public function existePropuestaId($id) {
+            public function existePropuestaPorIdPedido($id) {
                 $query="SELECT `idPropuesta`, `idPedido`, `Precio`, `idTransportista`, `informacion` FROM `propuesta` WHERE idPedido = $id";
     
                 $resultado = metodoGet($query);
@@ -63,13 +63,50 @@
                 return json_encode($resultado->fetch(PDO::FETCH_ASSOC));
               
             }
+            public function existePropuestaPorId($id) {
+                $query="SELECT `idPropuesta`, `idPedido`, `Precio`, `idTransportista`, `informacion` FROM `propuesta` WHERE idPropuesta = $id";
+    
+                $resultado = metodoGet($query);
+                header("HTTP/1.1 200 OK");
+               
+                 $array = json_encode($resultado->fetch(PDO::FETCH_ASSOC),true);
+                $array = json_decode($array,true);
+                $idTranpo = (int) $array["idTransportista"];
+                $infoTransp = json_decode(TransportistaApi::ExisteTransportistaId($idTranpo),true);
+                $array["infoTransp"] = $infoTransp;
+                
+                
+                $respuesta =json_encode($array,true);
+                return $respuesta;
+            }
+
+            public function TraerPorId($request, $response, $args){
+                if(isset($_POST['idPropuesta'])) {
+                
+                    $idPropuesta=$_POST['idPropuesta'];
+                    
+                   
+                    $ppta = Propuestaapi::existePropuestaPorId($idPropuesta);
+                    if($ppta!="false"){
+                        
+                        echo $ppta;
+                    }
+                    else{
+                        echo "no existe ese idPropuesta";
+                    }
+                    
+                }
+                else{ echo "falta idPropuesta";}
+            }
             public function traerPropuestasIdPedido($id) {
+              
                 $query="SELECT * FROM `propuesta` WHERE idPedido = $id";
                 
                 $resultado = metodoGet($query);
                 
                 $JsonRta = json_encode($resultado->fetchAll());
                 $array = json_decode($JsonRta,true);
+                var_dump($array);
                 //faltaria traer la info del transportista tambiern 
                 //echo count($array);
                 
@@ -86,9 +123,9 @@
                          //$respuesta =json_encode($array,true));
                          
                     }
-                   //var_dump($array);
+                  
                     $respuesta =json_encode($array,true);
-                    //var_dump($respuesta);
+                   
 
                 }
                 header("HTTP/1.1 200 OK");

@@ -30,7 +30,7 @@ $app->group('/pedidos', function () {
 $app->group('/propuesta', function () {
     // $this->get('/', \PedidosApi::class . ':TraerTodos');
     $this->post('/', \PropuestaApi::class . ':CotizarUno');
-
+    $this->post('/TraerPorId/', \PropuestaApi::class . ':TraerPorId');
     // $this->put('/', \UsuariosApi::class . ':ActualizarUno');
     // $this->post('/delete', \UsuariosApi::class . ':BorrarById');
 });
