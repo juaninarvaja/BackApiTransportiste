@@ -113,6 +113,7 @@ class PedidosApi{
                     if(strcmp ($rta , "false" ) != 0){
                         $propuestas = PropuestaApi::traerPropuestasIdPedido($idPedido);
                         echo ($propuestas);
+                      
                     }
                     else{
                         echo "no existe ese idPedido";

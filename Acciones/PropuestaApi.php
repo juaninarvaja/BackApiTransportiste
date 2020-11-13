@@ -69,10 +69,30 @@
                 $resultado = metodoGet($query);
                 
                 $JsonRta = json_encode($resultado->fetchAll());
-                // $array = json_decode($JsonRta,true);
-          
+                $array = json_decode($JsonRta,true);
+                //faltaria traer la info del transportista tambiern 
+                //echo count($array);
+                
+                for($i = 0;$i<count($array);$i++){
+                    // var_dump((int)$array[$i]["idTransportista"]);
+                    if(isset($array[$i]["idTransportista"])){
+                        //echo "todo ok";
+                        $idTranpo = $array[$i]["idTransportista"];
+                        //echo $idTranpo;
+                         $infoTransp = json_decode(TransportistaApi::ExisteTransportistaId($idTranpo),true);
+                         $array[$i]["infoTransp"] = $infoTransp;
+                         // echo $infoTransp;
+                        // var_dump ($array);
+                         //$respuesta =json_encode($array,true));
+                         
+                    }
+                   //var_dump($array);
+                    $respuesta =json_encode($array,true);
+                    //var_dump($respuesta);
+
+                }
                 header("HTTP/1.1 200 OK");
-                return $JsonRta;
+                return $respuesta;
               
             }
 
