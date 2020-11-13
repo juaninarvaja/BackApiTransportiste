@@ -49,6 +49,12 @@ $app->group('/cliente', function () {
     $this->post('/pedidos/', \ClienteApi::class . ':getClienteConPedidosbyEmail');
     
 });
+$app->group('/calificar', function () {
+    // $this->get('/', \PedidosApi::class . ':TraerTodos');
+    $this->post('/', \xxx::class . ':TraerPorMailPost');
+
+    
+});
 
 
 $app->run();

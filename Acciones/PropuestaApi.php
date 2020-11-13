@@ -70,14 +70,18 @@
                 header("HTTP/1.1 200 OK");
                
                  $array = json_encode($resultado->fetch(PDO::FETCH_ASSOC),true);
-                $array = json_decode($array,true);
-                $idTranpo = (int) $array["idTransportista"];
-                $infoTransp = json_decode(TransportistaApi::ExisteTransportistaId($idTranpo),true);
-                $array["infoTransp"] = $infoTransp;
-                
-                
-                $respuesta =json_encode($array,true);
-                return $respuesta;
+                //  var_dump()
+                 if($array != "false"){
+                    $array = json_decode($array,true);
+                    $idTranpo = (int) $array["idTransportista"];
+                    $infoTransp = json_decode(TransportistaApi::ExisteTransportistaId($idTranpo),true);
+                    $array["infoTransp"] = $infoTransp;
+                    
+                    
+                    $respuesta =json_encode($array,true);
+                    return $respuesta;
+                 }
+                 else { echo "no se encontro esa porpuesta"; }
             }
 
             public function TraerPorId($request, $response, $args){
