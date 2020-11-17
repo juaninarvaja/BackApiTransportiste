@@ -3,6 +3,7 @@ include 'BD/bd.php';
 include_once "Acciones/UsuariosApi.php";
 include_once "Acciones/PedidosApi.php";
 include_once "Acciones/PropuestaApi.php";
+include_once "Acciones/ViajeApi.php";
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -49,9 +50,15 @@ $app->group('/cliente', function () {
     $this->post('/pedidos/', \ClienteApi::class . ':getClienteConPedidosbyEmail');
     
 });
-$app->group('/calificar', function () {
+// $app->group('/calificar', function () {
+//     // $this->get('/', \PedidosApi::class . ':TraerTodos');
+//     $this->post('/', \xxx::class . ':TraerPorMailPost');
+
+    
+// });
+$app->group('/viaje', function () {
     // $this->get('/', \PedidosApi::class . ':TraerTodos');
-    $this->post('/', \xxx::class . ':TraerPorMailPost');
+    $this->post('/', \ViajeApi::class . ':generarViaje');
 
     
 });

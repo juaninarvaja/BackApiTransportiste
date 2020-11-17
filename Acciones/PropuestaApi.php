@@ -81,7 +81,7 @@
                     $respuesta =json_encode($array,true);
                     return $respuesta;
                  }
-                 else { echo "no se encontro esa porpuesta"; }
+                 else { return false; }
             }
 
             public function TraerPorId($request, $response, $args){
@@ -104,16 +104,17 @@
             }
             public function traerPropuestasIdPedido($id) {
               
+                $respuesta = " ";
                 $query="SELECT * FROM `propuesta` WHERE idPedido = $id";
                 
                 $resultado = metodoGet($query);
                 
                 $JsonRta = json_encode($resultado->fetchAll());
                 $array = json_decode($JsonRta,true);
-                var_dump($array);
+              
                 //faltaria traer la info del transportista tambiern 
                 //echo count($array);
-                
+               
                 for($i = 0;$i<count($array);$i++){
                     // var_dump((int)$array[$i]["idTransportista"]);
                     if(isset($array[$i]["idTransportista"])){
@@ -127,7 +128,7 @@
                          //$respuesta =json_encode($array,true));
                          
                     }
-                  
+                    // echo "llego aca";
                     $respuesta =json_encode($array,true);
                    
 

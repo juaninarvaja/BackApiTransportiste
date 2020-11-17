@@ -134,7 +134,12 @@ class PedidosApi{
     
             }
 
-            
+            public function updateEstadoPedidoById($idPedido,$estado){
+                $query = "UPDATE `pedido` SET `estado`='$estado' WHERE idPedido = $idPedido";
+                $resultado = metodoPut($query);
+                header("HTTP/1.1 200 OK");
+                return json_encode($resultado);
+            }
             
     
                 public function existePedidoId($id) {
