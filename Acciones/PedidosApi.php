@@ -47,6 +47,46 @@ class PedidosApi{
             exit();
         }
     }
+    public function TraerTodosTodos($request, $response, $args) {
+
+        if($_SERVER['REQUEST_METHOD']=='GET'){
+            //si contiene un id es a un solo registro
+            if(isset($_GET['id'])){
+                $query="select * from pedido where idAuth=".$_GET['idAuth'];
+                $resultado=metodoGet($query);
+                echo json_encode($resultado->fetch(PDO::FETCH_ASSOC));
+            }else{ //sino a todos
+                $query="select * from pedido";
+                $resultado=metodoGet($query);
+                $JsonRta = json_encode($resultado->fetchAll());
+                $array = json_decode($JsonRta,true);
+                $auxArray = array();
+
+                for($i= 0; $i<count($array);$i++){
+                    
+       
+           
+                        // echo count($array);
+                            $DireccionOrigen = json_decode(Direcciones::TraerDireccionById($array[$i]["DireccionOrigen"]),true);
+                            $DireccionDestino = json_decode(Direcciones::TraerDireccionById($array[$i]["DireccionLlegada"]),true);
+                            $array[$i]["DireccionOrigen"] =   $DireccionOrigen ;
+                            $array[$i]["DireccionLlegada"] =  $DireccionDestino;
+                            $clienteInfo = json_decode(ClienteApi::TraerClientePorId($array[$i]["idCliente"]),true);
+                            $array[$i]["clienteInfo"] = $clienteInfo;
+                            array_push($auxArray,$array[$i]);
+                            // echo "clienteInfo";
+                            // var_dump($clienteInfo);
+                    
+                   
+                }
+                echo json_encode($auxArray);
+              
+                //   echo json_encode($array);
+            }
+            header("HTTP/1.1 200 OK");
+            exit();
+        }
+    }
     public function SubirUno($request, $response, $args){
             // if($_POST['METHOD']=='POST'){
             unset($_POST['METHOD']); 

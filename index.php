@@ -21,7 +21,8 @@ $app->group('/usuarios', function () {
     $this->post('/delete', \UsuariosApi::class . ':BorrarById');
 });
 $app->group('/pedidos', function () {
-    $this->get('/', \PedidosApi::class . ':TraerTodos');
+     $this->get('/', \PedidosApi::class . ':TraerTodos');
+    //$this->get('/', \PedidosApi::class . ':TraerTodosTodos');
     $this->post('/', \PedidosApi::class . ':SubirUno');
     $this->post('/propuestas/', \PedidosApi::class . ':TraerPedidosConSusPropuestas');
 
@@ -59,6 +60,10 @@ $app->group('/cliente', function () {
 $app->group('/viaje', function () {
     // $this->get('/', \PedidosApi::class . ':TraerTodos');
     $this->post('/', \ViajeApi::class . ':generarViaje');
+    $this->post('/traerPorIdPedido', \ViajeApi::class . ':traerViajesPorIdPedido');
+    $this->post('/estado', \ViajeApi::class . ':CambiarEstadoViaje');
+    $this->post('/traerPorIdTransp', \ViajeApi::class . ':traerViajesPorIdTransportista');
+    
 
     
 });
