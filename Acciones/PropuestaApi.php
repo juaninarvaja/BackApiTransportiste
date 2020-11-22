@@ -192,7 +192,25 @@
                 }
                 else{ echo "falta el mail";}
             }
+            
+            public function cancelarPropuestaByIdProp($request, $response, $args){
+                if(isset($_POST['idPropuesta'])) {
+                
+                    $idPropuesta=$_POST['idPropuesta'];
+                    $infoProp = PropuestaApi::existePropuestaPorId($idPropuesta);
 
+
+                    //$infoTta = TransportistaApi::TraerTransportPorMail($email);
+                    if($infoProp == "false" || $infoProp == false){
+                        echo "ese id Propuesta  no existe";
+                    }
+                    else{
+                        $borro = PropuestaApi::borrarPropuestaPorId($idPropuesta);
+                        return true;
+                    }
+                }
+                else{ echo "falta el idPropuesta";}
+            }
             
 
 
@@ -259,6 +277,8 @@
                 $resultado=metodoDelete($query);
                 return $resultado;
             }
+
+            
 
         // }
     }

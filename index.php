@@ -37,7 +37,7 @@ $app->group('/propuesta', function () {
     $this->post('/TraerPorId/', \PropuestaApi::class . ':TraerPorId');
     $this->post('/TraerPorIdTransp/', \PropuestaApi::class . ':TraerPorIdTransp');
     $this->post('/TraerPorEmailTransp/', \PropuestaApi::class . ':TraerPorEmailTransp');
-
+    $this->post('/cancelar/', \PropuestaApi::class . ':cancelarPropuestaByIdProp');
 
     // $this->put('/', \UsuariosApi::class . ':ActualizarUno');
     // $this->post('/delete', \UsuariosApi::class . ':BorrarById');
