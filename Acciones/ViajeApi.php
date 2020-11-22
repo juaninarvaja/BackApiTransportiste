@@ -79,6 +79,9 @@ class ViajeApi{
                      $idPedido= $array[$i]["idPedido"];
                      $infoPedido = json_decode(PedidosApi::TraerUnobyIdPedido($idPedido),true);
                      $array[$i]["infoPedido"] = $infoPedido;
+                     $idCliente= $infoPedido["idCliente"];
+                     $idCliente = json_decode(ClienteApi::TraerClientePorId($idCliente),true);
+                     $array[$i]["infoCliente"] = $idCliente;
 
                      
                 }
@@ -182,6 +185,68 @@ class ViajeApi{
         
     }
 
+   function getIdPedidoByIdViaje($idViaje){
+       //var_dump($idViaje);
+    $query="SELECT `idPedido` FROM `viajes` WHERE idViaje = $idViaje";
+    $resultado = metodoGet($query);
+    header("HTTP/1.1 200 OK");
+   $rta =json_encode($resultado->fetch(PDO::FETCH_ASSOC));
+   //var_dump($rta);
+    if($rta == "false"){
+    //     echo "entro a if";
+         return false;
+     }
+     else{
+    //     echo "entro a else";
+    //     var_dump(json_encode($resultado->fetch(PDO::FETCH_ASSOC)));
+    return $rta;
+    }
+   }
+
+
+    function getIdClienteByIdViaje($idViaje){
+        $idPedido = ViajeApi::getIdPedidoByIdViaje($idViaje);
+        if($idPedido!= false){
+              
+                $idPed = json_decode($idPedido);
+                $idPedEste = (int) $idPed->idPedido;
+                $query="SELECT `idCliente` FROM `pedido` WHERE idPedido = $idPedEste";
+    
+                $resultado = metodoGet($query);
+                header("HTTP/1.1 200 OK");
+               
+                $rta = json_encode($resultado->fetch(PDO::FETCH_ASSOC));
+                $rtaArray = json_decode($rta);
+                return (int)$rtaArray->idCliente;
+            }  
+        else {return false;}
+    }
+
+    function getTransportistaByIdViaje($idViaje){
+
+                $query="SELECT `idTransportista` FROM `viajes` WHERE idViaje = $idViaje";
+    
+                $resultado = metodoGet($query);
+                header("HTTP/1.1 200 OK");
+               
+                $rta = json_encode($resultado->fetch(PDO::FETCH_ASSOC));
+                $rtaArray = json_decode($rta);
+                return (int)$rtaArray->idTransportista;
+            
+    }
+
+    function getEstadoByIdViaje($idViaje){
+
+        $query="SELECT `estado` FROM `viajes` WHERE idViaje = $idViaje";
+
+        $resultado = metodoGet($query);
+        header("HTTP/1.1 200 OK");
+       
+        $rta = json_encode($resultado->fetch(PDO::FETCH_ASSOC));
+        $rtaArray = json_decode($rta);
+        return $rtaArray->estado;
+    
+}
 
 
 }   
