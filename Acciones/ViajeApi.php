@@ -96,8 +96,129 @@ class ViajeApi{
         else {
             echo "falta el idTransportista";
         }
+    }
+    public function  traerViajesPorMailTransportista($request, $response, $args){  
+        if(isset($_POST['email'])){
+            $email=$_POST['email'];
+            $infoTta = TransportistaApi::TraerTransportPorMail($email);
+                    
+            if($infoTta == "false" || $infoTta == false){
+                echo "ese mail no existe";
+            }
+            else{
+                $array = json_decode($infoTta,true);
+            //var_dump($array["idTransportista"]);
+                //echo "ese mail si existe";
+                  $idTransportista = $array["idTransportista"];
+                  $respuesta = " ";
+                  $query="SELECT * FROM `viajes` WHERE idTransportista = $idTransportista";
+                  
+                  $resultado = metodoGet($query);
+                  
+                  $JsonRta = json_encode($resultado->fetchAll());
+      
+                  $array = json_decode($JsonRta,true);
+          
+                 
+                  for($i = 0;$i<count($array);$i++){
+                      // var_dump((int)$array[$i]["idTransportista"]);
+                      if(isset($array[$i]["idPedido"])){
+      
+      
+                           $idPedido= $array[$i]["idPedido"];
+                           $infoPedido = json_decode(PedidosApi::TraerUnobyIdPedido($idPedido),true);
+                           $array[$i]["infoPedido"] = $infoPedido;
+                           $idCliente= $infoPedido["idCliente"];
+                           $idCliente = json_decode(ClienteApi::TraerClientePorId($idCliente),true);
+                           $array[$i]["infoCliente"] = $idCliente;
+      
+                           
+                      }
+                      // echo "llego aca";
+                      $respuesta =json_encode($array,true);
+                     
+      
+                  }
+                  header("HTTP/1.1 200 OK");
+                  return $respuesta;
+            }
 
 
+ 
+        }
+        else {
+            echo "falta el mail del tranp";
+        }
+    }
+   
+    public function   traerViajesPorMailCliente($request, $response, $args){  
+        if(isset($_POST['email'])){
+            $email=$_POST['email'];
+            $infoCli = ClienteApi::TraerClientePorMail($email);
+                    
+            if($infoCli == "false" || $infoCli == false){
+                echo "ese mail no existe";
+            }
+            else{
+                $array = json_decode($infoCli,true);
+            //var_dump($array["idTransportista"]);
+                //echo "ese mail si existe";
+                $idCli = $array["id"];
+                $arrayIdPedidos = PedidosApi::traerArrayIdPedidosDeUnIdCliente($idCli);
+                $respuesta = " ";
+                //var_dump(count($arrayIdPedidos));
+                if(count($arrayIdPedidos)>0){
+                    //var_dump($firstIdPedido);
+           
+                    //var_dump($firstIdPedido);
+                    $query="SELECT * FROM `viajes` WHERE ";
+                for($i=0;$i<count($arrayIdPedidos);$i++){
+                    if($i!=0){
+                        $query =$query . " OR ";
+                    }
+                    $auxIdPedido = $arrayIdPedidos[$i]["idPedido"];
+                    $auxFinalQuery = "idPedido = $auxIdPedido";
+                    $query = $query . $auxFinalQuery;
+                    
+                }
+                    $resultado = metodoGet($query);
+                    
+                    $JsonRta = json_encode($resultado->fetchAll());
+        
+                    $array = json_decode($JsonRta,true);
+            
+                   
+                    for($i = 0;$i<count($array);$i++){
+                        // var_dump((int)$array[$i]["idTransportista"]);
+                        if(isset($array[$i]["idPedido"])){
+        
+        
+                             $idPedido= $array[$i]["idPedido"];
+                             $infoPedido = json_decode(PedidosApi::TraerUnobyIdPedido($idPedido),true);
+                             $array[$i]["infoPedido"] = $infoPedido;
+  
+  
+                             $idTransportista= $array[$i]["idTransportista"];
+                             $infoTransp = json_decode(TransportistaApi::ExisteTransportistaId($idTransportista),true);
+                             $array[$i]["infoTransp"] = $infoTransp;
+        
+                             
+                        }
+                        // echo "llego aca";
+                        $respuesta =json_encode($array,true);
+                       
+        
+                    }
+                    header("HTTP/1.1 200 OK");
+                    return $respuesta;
+                }
+                }
+            
+
+            }
+        else {
+            echo "falta el mail del cliente";
+        }
     }
 
 

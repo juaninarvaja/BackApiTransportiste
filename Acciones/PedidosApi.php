@@ -190,6 +190,17 @@ class PedidosApi{
                     return json_encode($resultado->fetch(PDO::FETCH_ASSOC));
                 
                 }
+
+            public function traerArrayIdPedidosDeUnIdCliente($idCliente){
+                $query = "SELECT `idPedido` FROM `pedido` WHERE idCliente = $idCliente";
+                $resultado = metodoGet($query);
+                //header("HTTP/1.1 200 OK");
+
+                $resp= json_encode($resultado->fetchAll());  
+                $array = json_decode($resp,true);
+                return $array;
+                //var_dump(count($array));
+            }
     
 }
 ?>

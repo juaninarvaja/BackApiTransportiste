@@ -68,6 +68,8 @@ $app->group('/viaje', function () {
     $this->post('/traerPorIdPedido', \ViajeApi::class . ':traerViajesPorIdPedido');
     $this->post('/estado', \ViajeApi::class . ':CambiarEstadoViaje');
     $this->post('/traerPorIdTransp', \ViajeApi::class . ':traerViajesPorIdTransportista');
+    $this->post('/traerPorMailTransp', \ViajeApi::class . ':traerViajesPorMailTransportista');
+    $this->post('/traerPorMailCliente', \ViajeApi::class . ':traerViajesPorMailCliente');
     
 
     
