@@ -70,7 +70,7 @@
                 header("HTTP/1.1 200 OK");
                
                  $array = json_encode($resultado->fetch(PDO::FETCH_ASSOC),true);
-                //  var_dump()
+
                  if($array != "false"){
                     $array = json_decode($array,true);
                     $idTranpo = (int) $array["idTransportista"];
@@ -129,6 +129,7 @@
                     
                    
                     $ppta = Propuestaapi::existePropuestaPorId($idPropuesta);
+                    var_dump($ppta);
                     if($ppta!="false"){
                         
                         echo $ppta;
@@ -161,6 +162,41 @@
                 else{ echo "falta idTransportista";}
             }
 
+            public function TraerPorEmailTransp($request, $response, $args){
+                if(isset($_POST['email'])) {
+                
+                    $email=$_POST['email'];
+                    $infoTta = TransportistaApi::TraerTransportPorMail($email);
+                    
+                    
+
+                    if($infoTta == "false" || $infoTta == false){
+                        echo "ese mail no existe";
+                    }
+                    else{
+                        $array = json_decode($infoTta,true);
+                    //var_dump($array["idTransportista"]);
+                        //echo "ese mail si existe";
+                          $ppta = Propuestaapi::existePropuestaPorIdTranspo($array["idTransportista"]);
+                       // var_dump($ppta);
+                        //$ppta = false;
+                        if($ppta!="false"){
+                            
+                            echo $ppta;
+                        }
+                        else{
+                            echo "no existe ese idTranspo";
+                        }
+                    }
+    
+                    
+                   
+                   
+        
+                    
+                }
+                else{ echo "falta el mail";}
+            }
 
             
 

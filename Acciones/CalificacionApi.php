@@ -10,15 +10,16 @@ class CalificacionApi{
       //si existe ya ese registro deja puntuar a la parte que falta
    //si no existe crea el registro en la bd y puntua el que realizo este pedido
 
-   //___________
-
-
    //al termianar esto, deberia recolectar los idcliente y idtransportista desde el id viaje, 
    //y luego iterar en la base de datos para poder traer
    //la cantidad de notas que tiene cada uno y sus valores, con estos saca promedio
    //y lo setea en su tabla "transportista" o "cliente" segun corresponda
+   //___________
+   //tengo q valiar q la puntuacion sea de 1 a 10
+
    public function Calificar($request, $response, $args) {
-      if(isset($_POST['idViaje']) && isset($_POST['calificacion']) && isset($_POST['tipo']) && ($_POST['tipo'] == "transportista" || $_POST['tipo'] == "cliente")){
+      if(isset($_POST['idViaje']) && isset($_POST['calificacion']) && isset($_POST['tipo']) && ($_POST['tipo'] == "transportista" || $_POST['tipo'] == "cliente")
+       && $_POST['calificacion'] > 0 && $_POST['calificacion'] <= 10 ){
           $idViaje=$_POST['idViaje'];
           $tipo=$_POST['tipo'];
           $calificacion=$_POST['calificacion'];
@@ -33,7 +34,7 @@ class CalificacionApi{
 
               //var_dump($existeya);
                if($existeya){
-                  echo "tengo q updatear";
+                  //echo "tengo q updatear";
                   //update
                   CalificacionApi::UpdateUna($idViaje,$idCliente,$idTransportista,$tipo,$calificacion);
                   
@@ -59,7 +60,7 @@ class CalificacionApi{
         
       }
       else {
-          echo "falta el id o el tipo (debe ser cliente o transportista) o la calificacion";
+          echo "falta el id o el tipo (debe ser cliente o transportista) o la calificacion (debe estar entre 0 y 10)";
       }
   }
 
@@ -84,6 +85,8 @@ class CalificacionApi{
          $query="INSERT INTO `calificaciones`(`idViaje`, `puntuacionAlTransportista`, `idTransportista`, `idCliente`) VALUES ($idViaje,$calificacion,$idTransportista,$idCliente);";
          $queryAutoIncrement="select MAX(idAuth) as id from usuarios";
          $resultado=metodoPost($query,$queryAutoIncrement);
+         $promedioT = CalificacionApi::calcularPromedioTransportista($idTransportista);
+         TransportistaApi::setearCalificacionTransp($idTransportista,$promedioT);
          echo json_encode($resultado);
          header("HTTP/1.1 200 OK");
          exit();
@@ -92,6 +95,8 @@ class CalificacionApi{
          $query="INSERT INTO `calificaciones`(`idViaje`, `puntuacionAlCliente`, `idTransportista`, `idCliente`) VALUES ($idViaje,$calificacion,$idTransportista,$idCliente);";
          $queryAutoIncrement="select MAX(idAuth) as id from usuarios";
          $resultado=metodoPost($query,$queryAutoIncrement);
+         $promedioC = CalificacionApi::calcularPromedioCliente($idCliente);
+         ClienteApi::setearCalificacionCliente($idCliente,$promedioC);
          echo json_encode($resultado);
          header("HTTP/1.1 200 OK");
          exit();
@@ -103,6 +108,9 @@ class CalificacionApi{
         $query = "UPDATE `calificaciones` SET `puntuacionAlTransportista`= $calificacion WHERE idViaje = $idViaje";
         // $query="INSERT INTO `calificaciones`(`idViaje`, `puntuacionAlTransportista`, `idTransportista`, `idCliente`) VALUES ($idViaje,$calificacion,$idTransportista,$idCliente);";
         $resultado = metodoPut($query);
+        $promedioT = CalificacionApi::calcularPromedioTransportista($idTransportista);
+        TransportistaApi::setearCalificacionTransp($idTransportista,$promedioT);
+      
         echo json_encode($resultado);
         header("HTTP/1.1 200 OK");
 
@@ -112,10 +120,13 @@ class CalificacionApi{
          $query = "UPDATE `calificaciones` SET `puntuacionAlCliente`= $calificacion WHERE idViaje = $idViaje";
          // $query="INSERT INTO `calificaciones`(`idViaje`, `puntuacionAlTransportista`, `idTransportista`, `idCliente`) VALUES ($idViaje,$calificacion,$idTransportista,$idCliente);";
          $resultado = metodoPut($query);
-         
-         header("HTTP/1.1 200 OK");
-         CalificacionApi::calcularPromedioTransportista($idTransportista);
+         $promedioC = CalificacionApi::calcularPromedioCliente($idCliente);
+          ClienteApi::setearCalificacionCliente($idCliente,$promedioC);
+        
+       
+
          echo json_encode($resultado);
+         header("HTTP/1.1 200 OK");
          exit();
       }
 
@@ -126,13 +137,46 @@ class CalificacionApi{
       $resultado = metodoGet($query);
       header("HTTP/1.1 200 OK");
      
-      //$rta = $resultado->fetch(PDO::FETCH_ASSOC);
       $JsonRta = json_encode($resultado->fetchAll());
-     // $array = json_decode($JsonRta,true);
-      //$auxArray = array();
-      var_dump($JsonRta);
-      //PQ me duevuleve solo una?
+      $array = json_decode($JsonRta,true);
+
+      $contador = 0;
+      $acumulador = 0;
+      for($i=0;$i<count($array);$i++){
+         if($array[$i]["puntuacionAlTransportista"]  != "0" || $array[$i]["puntuacionAlTransportista"]  != 0){
+            $contador = $contador +1;
+            $acumulador = $acumulador + (int)$array[$i]["puntuacionAlTransportista"];
+
+         }
+      }
+      $promedio = $acumulador / $contador;
+      return  bcdiv($promedio, '1', 2);;
+
    }
+
+   public function calcularPromedioCliente($idCliente){
+      $query="SELECT `puntuacionAlCliente` FROM `calificaciones` WHERE idCliente= $idCliente";
+
+      $resultado = metodoGet($query);
+      header("HTTP/1.1 200 OK");
+     
+      $JsonRta = json_encode($resultado->fetchAll());
+      $array = json_decode($JsonRta,true);
+
+      $contador = 0;
+      $acumulador = 0;
+      for($i=0;$i<count($array);$i++){
+         if($array[$i]["puntuacionAlCliente"]  != "0" || $array[$i]["puntuacionAlCliente"]  != 0){
+            $contador = $contador +1;
+            $acumulador = $acumulador + (int)$array[$i]["puntuacionAlCliente"];
+
+         }
+      }
+      $promedio = $acumulador / $contador;
+      return  bcdiv($promedio, '1', 2);;
+
+   }
+   
    
     
 }   
