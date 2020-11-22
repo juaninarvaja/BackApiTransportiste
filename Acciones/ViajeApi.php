@@ -128,9 +128,14 @@ class ViajeApi{
                            $idPedido= $array[$i]["idPedido"];
                            $infoPedido = json_decode(PedidosApi::TraerUnobyIdPedido($idPedido),true);
                            $array[$i]["infoPedido"] = $infoPedido;
+                           //
                            $idCliente= $infoPedido["idCliente"];
                            $idCliente = json_decode(ClienteApi::TraerClientePorId($idCliente),true);
                            $array[$i]["infoCliente"] = $idCliente;
+                           //
+                           $idPropuesta= $array[$i]["idPropuesta"];
+                           $infoPropuesta = json_decode(PropuestaApi::existePropuestaPorId($idPropuesta),true);
+                           $array[$i]["infoPropuesta"] = $infoPropuesta;
       
                            
                       }
@@ -198,9 +203,13 @@ class ViajeApi{
                              $array[$i]["infoPedido"] = $infoPedido;
   
   
-                             $idTransportista= $array[$i]["idTransportista"];
-                             $infoTransp = json_decode(TransportistaApi::ExisteTransportistaId($idTransportista),true);
-                             $array[$i]["infoTransp"] = $infoTransp;
+                            //  $idTransportista= $array[$i]["idTransportista"];
+                            //  $infoTransp = json_decode(TransportistaApi::ExisteTransportistaId($idTransportista),true);
+                            //  $array[$i]["infoTransp"] = $infoTransp;
+                             //
+                             $idPropuesta= $array[$i]["idPropuesta"];
+                             $infoPropuesta = json_decode(PropuestaApi::existePropuestaPorId($idPropuesta),true);
+                             $array[$i]["infoPropuesta"] = $infoPropuesta;
         
                              
                         }
