@@ -136,6 +136,11 @@ class ViajeApi{
                            $idPropuesta= $array[$i]["idPropuesta"];
                            $infoPropuesta = json_decode(PropuestaApi::existePropuestaPorId($idPropuesta),true);
                            $array[$i]["infoPropuesta"] = $infoPropuesta;
+                           //
+                            $DireccionOrigen = json_decode(Direcciones::TraerDireccionById($array[$i]["infoPedido"]["DireccionOrigen"]),true);
+                            $DireccionDestino = json_decode(Direcciones::TraerDireccionById($array[$i]["infoPedido"]["DireccionLlegada"]),true);
+                            $array[$i]["DireccionOrigen"] =   $DireccionOrigen ;
+                            $array[$i]["DireccionLlegada"] =  $DireccionDestino;
       
                            
                       }
@@ -210,14 +215,21 @@ class ViajeApi{
                              $idPropuesta= $array[$i]["idPropuesta"];
                              $infoPropuesta = json_decode(PropuestaApi::existePropuestaPorId($idPropuesta),true);
                              $array[$i]["infoPropuesta"] = $infoPropuesta;
+                             //
+                             //var_dump($array[$i]["infoPedido"]);
+                             $DireccionOrigen = json_decode(Direcciones::TraerDireccionById($array[$i]["infoPedido"]["DireccionOrigen"]),true);
+                             $DireccionDestino = json_decode(Direcciones::TraerDireccionById($array[$i]["infoPedido"]["DireccionLlegada"]),true);
+                             $array[$i]["DireccionOrigen"] =   $DireccionOrigen ;
+                             $array[$i]["DireccionLlegada"] =  $DireccionDestino;
         
                              
                         }
                         // echo "llego aca";
-                        $respuesta =json_encode($array,true);
+                        
                        
         
                     }
+                    $respuesta =json_encode($array,true);
                     header("HTTP/1.1 200 OK");
                     return $respuesta;
                 }
