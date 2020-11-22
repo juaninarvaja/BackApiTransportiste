@@ -84,6 +84,44 @@
                  else { return false; }
             }
 
+            public function existePropuestaPorIdTranspo($idT) {
+            
+                $query="SELECT `idPropuesta`, `idPedido`, `Precio`, `idTransportista`, `informacion` FROM `propuesta` WHERE idTransportista = $idT";
+    
+                $resultado = metodoGet($query);
+                header("HTTP/1.1 200 OK");
+               
+                //  $array = json_encode($resultado->fetch(PDO::FETCH_ASSOC),true);
+                 $resp= json_encode($resultado->fetchAll());
+                  
+                  $array = json_decode($resp,true);
+                 if($array != "false"){
+                     //var_dump($array);
+                    for($i = 0;$i<count($array);$i++){
+                        
+
+
+                    $idPedido= $array[$i]["idPedido"];
+                    $infoPedido = json_decode(PedidosApi::TraerUnobyIdPedido($idPedido),true);
+                    $array[$i]["infoPedido"] = $infoPedido;
+                    
+
+                    $idCliente= $infoPedido["idCliente"];
+                    $idCliente = json_decode(ClienteApi::TraerClientePorId($idCliente),true);
+                    $array[$i]["infoCliente"] = $idCliente;
+                   // var_dump($array[$i]);
+                    }
+                    
+                    $respuesta =json_encode($array,true);
+                    //var_dump($respuesta);
+                    return $respuesta;
+                 }
+                 else { return false; }
+            }
+
+
+
+
             public function TraerPorId($request, $response, $args){
                 if(isset($_POST['idPropuesta'])) {
                 
@@ -102,6 +140,31 @@
                 }
                 else{ echo "falta idPropuesta";}
             }
+
+            public function TraerPorIdTransp($request, $response, $args){
+                if(isset($_POST['idTransportista'])) {
+                
+                    $idTransportista=$_POST['idTransportista'];
+                    
+                   
+                    $ppta = Propuestaapi::existePropuestaPorIdTranspo($idTransportista);
+                    //var_dump($ppta);
+                    if($ppta!="false"){
+                        
+                        echo $ppta;
+                    }
+                    else{
+                        echo "no existe ese idTranspo";
+                    }
+                    
+                }
+                else{ echo "falta idTransportista";}
+            }
+
+
+            
+
+
             public function traerPropuestasIdPedido($id) {
               
                 $respuesta = " ";
