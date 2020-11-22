@@ -148,11 +148,31 @@ class PedidosApi{
                 if(isset($_POST["idPedido"])){
                     $idPedido = $_POST['idPedido'];
                     // echo $idPedido;
+                    $rta =PedidosAPi::borrarPedidoYPropuestasAsociadas($idPedido);
+                    
+                    // if(strcmp ($rta , "false" ) != 0){
+                    //     $propuestas = PropuestaApi::traerPropuestasIdPedido($idPedido);
+                    //     echo ($propuestas);
+                      
+                    // }
+                    // else{
+                    //     echo "no existe ese idPedido";
+                    // }
+                   
+                }else{
+                    echo "no mandaste el idPedido";
+                }
+
+            }
+            public function  cancelarPedidoPorIdPedido($request, $response, $args){
+                if(isset($_POST["idPedido"])){
+                    $idPedido = $_POST['idPedido'];
+                    // echo $idPedido;
                     $rta =PedidosAPi::TraerUnobyIdPedido($idPedido);
                     
                     if(strcmp ($rta , "false" ) != 0){
-                        $propuestas = PropuestaApi::traerPropuestasIdPedido($idPedido);
-                        echo ($propuestas);
+                        $propuestas = PedidosApi::borrarPedidoYPropuestasAsociadas($idPedido);
+                        echo $propuestas;
                       
                     }
                     else{
@@ -164,6 +184,23 @@ class PedidosApi{
                 }
 
             }
+            public function borrarPedidoYPropuestasAsociadas($idPedido){
+                $propuestasAsoc = PropuestaApi::traerTodasPropuestasPorIdPedido($idPedido);
+                $arrayProp = json_decode($propuestasAsoc,true);
+                //var_dump(count($arrayProp));
+                if(count($arrayProp)>0 && $arrayProp != null){
+                    for($i=0;$i<count($arrayProp);$i++){
+                        $rta = PropuestaApi::borrarPropuestaPorId($arrayProp[$i]["idPropuesta"]);
+                       //var_dump($arrayProp[$i]["idPropuesta"]);
+                    }
+                    
+           
+                }
+                $query="DELETE FROM `pedido` WHERE idPedido =$idPedido";
+                $resultado=metodoDelete($query);
+                return $resultado;
+                }
+
 
             public function TraerUnobyIdPedido($id) {
                 $query="SELECT `idCliente`, `idPedido`, `DireccionLlegada`, `DireccionOrigen`, `PropuestasRecibidas`, `estado`, `Distancia`, `descripcion` FROM `pedido` WHERE idPedido = $id";
@@ -201,6 +238,8 @@ class PedidosApi{
                 return $array;
                 //var_dump(count($array));
             }
+
+
     
 }
 ?>

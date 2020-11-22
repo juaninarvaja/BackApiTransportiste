@@ -36,10 +36,7 @@
                        $query2 = "UPDATE `pedido` SET `PropuestasRecibidas`= '$auxStringData'  WHERE idPedido = $idPedido"; 
                         $resultado2 =  metodoPut($query2);
                         // var_dump($resultado2);
-                        exit(true);
-                      
-
-                        
+                        exit(true);                        
                     }
                     else{
                         echo "No existe un transportista con ese id";
@@ -63,6 +60,16 @@
                 return json_encode($resultado->fetch(PDO::FETCH_ASSOC));
               
             }
+
+            public function traerTodasPropuestasPorIdPedido($id) {
+                $query="SELECT `idPropuesta`, `idPedido`, `Precio`, `idTransportista`, `informacion` FROM `propuesta` WHERE idPedido = $id";
+    
+                $resultado = metodoGet($query);
+                header("HTTP/1.1 200 OK");
+                return  json_encode($resultado->fetchAll());;
+              
+            }
+
             public function existePropuestaPorId($id) {
                 $query="SELECT `idPropuesta`, `idPedido`, `Precio`, `idTransportista`, `informacion` FROM `propuesta` WHERE idPropuesta = $id";
     
@@ -167,19 +174,13 @@
                 
                     $email=$_POST['email'];
                     $infoTta = TransportistaApi::TraerTransportPorMail($email);
-                    
-                    
-
                     if($infoTta == "false" || $infoTta == false){
                         echo "ese mail no existe";
                     }
                     else{
                         $array = json_decode($infoTta,true);
-                    //var_dump($array["idTransportista"]);
-                        //echo "ese mail si existe";
                           $ppta = Propuestaapi::existePropuestaPorIdTranspo($array["idTransportista"]);
-                       // var_dump($ppta);
-                        //$ppta = false;
+
                         if($ppta!="false"){
                             
                             echo $ppta;
@@ -188,12 +189,6 @@
                             echo "no existe ese idTranspo";
                         }
                     }
-    
-                    
-                   
-                   
-        
-                    
                 }
                 else{ echo "falta el mail";}
             }
@@ -258,7 +253,12 @@
   
         
             }     
-
+            public function borrarPropuestaPorId($idProp){
+                $idPropuesta = (int) $idProp;
+                $query="DELETE FROM `propuesta` WHERE idPropuesta =$idPropuesta";
+                $resultado=metodoDelete($query);
+                return $resultado;
+            }
 
         // }
     }

@@ -71,7 +71,7 @@ function metodoDelete($query){
         $sentencia->execute();
         $sentencia->closeCursor();
         desconectar();
-        return $_POST['id'];
+        return true;
     }catch(Exception $e){
         die("Error: ".$e);
     }
