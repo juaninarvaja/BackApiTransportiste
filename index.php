@@ -5,6 +5,7 @@ include_once "Acciones/PedidosApi.php";
 include_once "Acciones/PropuestaApi.php";
 include_once "Acciones/ViajeApi.php";
 include_once "Acciones/CalificacionApi.php";
+include_once "Acciones/StrikesApi.php";
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -70,6 +71,7 @@ $app->group('/viaje', function () {
     $this->post('/traerPorIdTransp/', \ViajeApi::class . ':traerViajesPorIdTransportista');
     $this->post('/traerPorMailTransp/', \ViajeApi::class . ':traerViajesPorMailTransportista');
     $this->post('/traerPorMailCliente/', \ViajeApi::class . ':traerViajesPorMailCliente');
+    $this->post('/cancelarViaje/', \ViajeApi::class . ':cancelarViaje');
 
 });
 

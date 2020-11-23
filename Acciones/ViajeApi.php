@@ -207,7 +207,6 @@ class ViajeApi{
                              $infoPedido = json_decode(PedidosApi::TraerUnobyIdPedido($idPedido),true);
                              $array[$i]["infoPedido"] = $infoPedido;
   
-  
                             //  $idTransportista= $array[$i]["idTransportista"];
                             //  $infoTransp = json_decode(TransportistaApi::ExisteTransportistaId($idTransportista),true);
                             //  $array[$i]["infoTransp"] = $infoTransp;
@@ -301,6 +300,73 @@ class ViajeApi{
             }
 
     }
+    public function cancelarViaje($request, $response, $args){
+        if(isset($_POST['idViaje']) && isset($_POST['tipo'])){
+             $idViaje=$_POST['idViaje'];
+             $tipo=$_POST['tipo'];
+            // $idPropuesta=$_POST['idPropuesta'];
+            // $idTransportista=$_POST['idTransportista'];
+           // var_dump(ViajeApi::existeViaje($idViaje));
+         
+                if(ViajeApi::existeViaje($idViaje)){
+                    if($tipo == "cliente"){
+                        $query2 = "UPDATE `viajes` SET `estado`= 'Cancelado por Cliente'  WHERE idViaje = $idViaje"; 
+                        $resultado2 =  metodoPut($query2);
+                        header("HTTP/1.1 200 OK");
+                        return json_encode($resultado2);
+                    }
+                    else if($tipo == "transportista"){
+                        //echo "es transportista";
+                        $existeEseStrike = StrikesApi::eseidViajeYaEsStrike($idViaje);
+                        if($existeEseStrike == false){
+                            $idTransportista = ViajeApi::getTransportistaByIdViaje($idViaje);
+                            $strickesActuales = StrikesApi::cuantoStrikeTiene($idTransportista);
+                            //var_dump($strickesActuales);
+                            if($strickesActuales < 3){
+                                $subioStrike = StrikesApi::subirStrike($idTransportista,$idViaje);
+                                //var_dump($subioStrike);
+                                $query2 = "UPDATE `viajes` SET `estado`= 'Cancelado por Transportista'  WHERE idViaje = $idViaje"; 
+                                $resultado2 =  metodoPut($query2);
+                                //header("HTTP/1.1 200 OK");
+                                //return json_encode($resultado2);
+                                $strickesActuales = StrikesApi::cuantoStrikeTiene($idTransportista);
+                                echo $strickesActuales;
+                                if($strickesActuales == 3){
+                                    TransportistaApi::DesHabilitarByIdTRansp($idTransportista);
+                                }
+                            }else{
+                                echo "ya tenes 3 strikes, que haces aca todavia?";
+                            }
+                            
+      
+                        //informa la cantidad de strickes q tiene ahora
+                        //si tiene 3 lo doy de baja
+                        }
+                        else{
+                            echo "ya tiene un strike asignado ese idViaje";
+                        }
+                        
+ 
+                        
+                    }
+                    else{
+                        echo "El tipo debe ser cliente o transp";
+                    }
+
+                }
+                else{
+                    echo "ese viaje no existe";
+                }
+
+
+            
+            }
+            else{
+               echo "no estas pasando todo lo q necesito";
+            }
+
+    }
+    
 
     function yaExisteUnViajeParaIdPropuesta($idPropuesta){
         $query="SELECT `idPedido`, `estado`, `idViaje`, `idTransportista`, `idPropuesta` FROM `viajes` WHERE idPropuesta = $idPropuesta";
@@ -389,6 +455,8 @@ class ViajeApi{
         return $rtaArray->estado;
     
 }
+
+    
 
 
 }   

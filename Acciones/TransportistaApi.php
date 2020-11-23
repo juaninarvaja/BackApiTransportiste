@@ -84,6 +84,21 @@
                 echo "mandame mail";
             } 
          }
+         public function DesHabilitarByIdTRansp($idTransp){
+
+                // $existe = TransportistaApi::TraerTransportPorMail($mail);
+                // if($existe != "false" && $existe != null){
+                    $query = "UPDATE `transportistas` SET `habilitado`= 0 WHERE `idTransportista`= $idTransp";
+                    $resultado = metodoPut($query);
+                    return json_encode($resultado);
+                    // header("HTTP/1.1 200 OK");
+                    // exit();
+                //}
+                // else {
+                //     echo "no existe ese mail";
+                // }
+
+            }
 
          public function TraerEstadoByMail($request, $response, $args){
             if(isset($_POST['mail'])){
