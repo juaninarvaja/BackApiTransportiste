@@ -39,6 +39,39 @@ class StrikesApi{
       return json_encode($resultado);
     
     }
+    function cantidadPorMail($request, $response, $args){
+        
+        if(isset($_POST['mail'])){
+            $mail=$_POST['mail'];
+
+            $auxTransp= TransportistaApi::TraerTransportPorMail($mail);
+            //var_dump($auxTransp);
+            if($auxTransp != "false"){
+                $array = json_decode($auxTransp,true);
+                $idTransp = (int)$array["idTransportista"];
+                $query="SELECT * FROM `strikes` WHERE idTransportista = $idTransp";
+
+                $resultado = metodoGet($query);
+            // header("HTTP/1.1 200 OK");
+            
+                $rta = json_encode($resultado->fetchAll());
+                $array = json_decode($rta,true);
+                $cantidad = count($array);
+               
+
+                 echo  $cantidad;
+
+            }
+            else{
+                echo "mail no valido";
+            }
+
+        }
+        else{
+            echo "no me llega el mail";
+        }
+   }
+    
 
 }   
 

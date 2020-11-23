@@ -75,12 +75,12 @@ $app->group('/viaje', function () {
 
 });
 
-// $app->group('/admin', function () {
-//     // $this->get('/', \PedidosApi::class . ':TraerTodos');
-//     $this->get('/solicitudesTransp/', \CalificacionApi::class . ':Calificar');
+$app->group('/strikes', function () {
+    // $this->get('/', \PedidosApi::class . ':TraerTodos');
+    $this->post('/cantidadPorMail/', \StrikesApi::class . ':cantidadPorMail');
 
     
-// });
+});
 
 
 
