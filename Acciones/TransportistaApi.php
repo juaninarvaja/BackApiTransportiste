@@ -132,6 +132,8 @@
                             $resultado=metodoDelete($query);
                             $query2="DELETE FROM `usuarios` WHERE email ='$mail'";
                             $resultado=metodoDelete($query2);
+                            $query3="DELETE FROM `clientes` WHERE email ='$mail'";
+                            $resultado=metodoDelete($query3);
                             return true;
                         }
                         catch(Exception $e){
