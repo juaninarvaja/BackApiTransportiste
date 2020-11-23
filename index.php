@@ -19,7 +19,7 @@ $app->group('/usuarios', function () {
     $this->get('/', \UsuariosApi::class . ':TraerTodos');
     $this->post('/', \UsuariosApi::class . ':SubirUno');
     $this->put('/', \UsuariosApi::class . ':ActualizarUno');
-    $this->post('/delete', \UsuariosApi::class . ':BorrarById');
+    $this->post('/delete/', \UsuariosApi::class . ':BorrarById');
 });
 $app->group('/pedidos', function () {
      $this->get('/', \PedidosApi::class . ':TraerTodos');
@@ -66,11 +66,11 @@ $app->group('/calificar', function () {
 $app->group('/viaje', function () {
     // $this->get('/', \PedidosApi::class . ':TraerTodos');
     $this->post('/', \ViajeApi::class . ':generarViaje');
-    $this->post('/traerPorIdPedido', \ViajeApi::class . ':traerViajesPorIdPedido');
-    $this->post('/estado', \ViajeApi::class . ':CambiarEstadoViaje');
-    $this->post('/traerPorIdTransp', \ViajeApi::class . ':traerViajesPorIdTransportista');
-    $this->post('/traerPorMailTransp', \ViajeApi::class . ':traerViajesPorMailTransportista');
-    $this->post('/traerPorMailCliente', \ViajeApi::class . ':traerViajesPorMailCliente');
+    $this->post('/traerPorIdPedido/', \ViajeApi::class . ':traerViajesPorIdPedido');
+    $this->post('/estado/', \ViajeApi::class . ':CambiarEstadoViaje');
+    $this->post('/traerPorIdTransp/', \ViajeApi::class . ':traerViajesPorIdTransportista');
+    $this->post('/traerPorMailTransp/', \ViajeApi::class . ':traerViajesPorMailTransportista');
+    $this->post('/traerPorMailCliente/', \ViajeApi::class . ':traerViajesPorMailCliente');
     
 
     

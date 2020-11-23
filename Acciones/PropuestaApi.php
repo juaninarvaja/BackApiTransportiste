@@ -136,7 +136,7 @@
                     
                    
                     $ppta = Propuestaapi::existePropuestaPorId($idPropuesta);
-                    var_dump($ppta);
+                    //var_dump($ppta);
                     if($ppta!="false"){
                         
                         echo $ppta;

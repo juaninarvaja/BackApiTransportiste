@@ -148,16 +148,16 @@ class PedidosApi{
                 if(isset($_POST["idPedido"])){
                     $idPedido = $_POST['idPedido'];
                     // echo $idPedido;
-                    $rta =PedidosAPi::borrarPedidoYPropuestasAsociadas($idPedido);
+                    $rta =PedidosAPi::TraerUnobyIdPedido($idPedido);
                     
-                    // if(strcmp ($rta , "false" ) != 0){
-                    //     $propuestas = PropuestaApi::traerPropuestasIdPedido($idPedido);
-                    //     echo ($propuestas);
+                    if(strcmp ($rta , "false" ) != 0){
+                        $propuestas = PropuestaApi::traerPropuestasIdPedido($idPedido);
+                        echo ($propuestas);
                       
-                    // }
-                    // else{
-                    //     echo "no existe ese idPedido";
-                    // }
+                    }
+                    else{
+                        echo "no existe ese idPedido";
+                    }
                    
                 }else{
                     echo "no mandaste el idPedido";
