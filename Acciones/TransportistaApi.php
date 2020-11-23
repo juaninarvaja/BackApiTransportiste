@@ -84,6 +84,29 @@
                 echo "mandame mail";
             } 
          }
+
+         public function TraerEstadoByMail($request, $response, $args){
+            if(isset($_POST['mail'])){
+                $mail=$_POST['mail'];
+                $existe = TransportistaApi::TraerTransportPorMail($mail);
+                if($existe != "false" && $existe != null){
+                    $query = "SELECT `habilitado` FROM `transportistas` WHERE  `email`= '$mail'";
+                    $resultado = metodoGet($query);
+                    echo json_encode($resultado->fetchAll());
+                    //echo json_encode($resultado);
+                    header("HTTP/1.1 200 OK");
+                    exit();
+                }
+                else {
+                    echo "no existe ese mail";
+                }
+
+            }
+            else {
+                echo "mandame mail";
+            } 
+         }
+         
     }
     ?>
     
