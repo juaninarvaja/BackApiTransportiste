@@ -44,7 +44,10 @@ include  "TRansportistaApi.php";
         }
         public function SubirUno($request, $response, $args){
                 // if($_POST['METHOD']=='POST'){
-                unset($_POST['METHOD']);
+             if(isset($_POST["tipoUsuario"]) && isset($_POST["email"]) && isset($_POST["contrasenia"])){
+             
+             
+ 
                 $tipouser=$_POST['tipoUsuario'];
                 $mail=$_POST['email'];
                 $contrasenia=$_POST['contrasenia'];
@@ -72,7 +75,7 @@ include  "TRansportistaApi.php";
                  
                 }
                 else if($tipouser == "transportista") {
-                    if($_POST['papeles']){
+                    if(isset($_POST['papeles'])){
                         $query="INSERT INTO `usuarios` (`tipoUsuario`, `email`, `contrasenia`) VALUES ('$tipouser', '$mail', '$contrasenia')";
                         $queryAutoIncrement="select MAX(idAuth) as id from usuarios";
                         $resultado=metodoPost($query, $queryAutoIncrement);
@@ -101,7 +104,10 @@ include  "TRansportistaApi.php";
                     //da de alta en tablea trasnportista
                     //da de alta en cliente
                 }
-
+            }
+            else{
+                echo "mandame toda la info";
+            }
             // }
         }
        public function ActualizarUno($request, $response, $args){
