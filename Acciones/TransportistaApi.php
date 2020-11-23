@@ -34,6 +34,15 @@
                 echo "falta el mail";
             }
         }
+        public function TraerNoHabilitados($request, $response, $args) {
+            $query="SELECT * FROM `transportistas` WHERE habilitado = 0";
+                
+            $resultado = metodoGet($query);
+            
+            echo json_encode($resultado->fetchAll());
+
+        }
+        
 
         public function  TraerPorIdPost($request, $response, $args) {
             if(isset($_POST['id'])){

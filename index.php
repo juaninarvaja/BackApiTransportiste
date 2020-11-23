@@ -38,15 +38,12 @@ $app->group('/propuesta', function () {
     $this->post('/TraerPorIdTransp/', \PropuestaApi::class . ':TraerPorIdTransp');
     $this->post('/TraerPorEmailTransp/', \PropuestaApi::class . ':TraerPorEmailTransp');
     $this->post('/cancelar/', \PropuestaApi::class . ':cancelarPropuestaByIdProp');
-
-    // $this->put('/', \UsuariosApi::class . ':ActualizarUno');
-    // $this->post('/delete', \UsuariosApi::class . ':BorrarById');
 });
 $app->group('/transp', function () {
     // $this->get('/', \PedidosApi::class . ':TraerTodos');
     $this->post('/mail/', \TransportistaApi::class . ':TraerPorMailPost');
     $this->post('/id/', \TransportistaApi::class . ':TraerPorIdPost');
-
+    $this->get('/solicitudesTransp/', \TransportistaApi::class . ':TraerNoHabilitados');
     // $this->put('/', \UsuariosApi::class . ':ActualizarUno');
     // $this->post('/delete', \UsuariosApi::class . ':BorrarById');
 });
@@ -71,10 +68,16 @@ $app->group('/viaje', function () {
     $this->post('/traerPorIdTransp/', \ViajeApi::class . ':traerViajesPorIdTransportista');
     $this->post('/traerPorMailTransp/', \ViajeApi::class . ':traerViajesPorMailTransportista');
     $this->post('/traerPorMailCliente/', \ViajeApi::class . ':traerViajesPorMailCliente');
-    
+
+});
+
+// $app->group('/admin', function () {
+//     // $this->get('/', \PedidosApi::class . ':TraerTodos');
+//     $this->get('/solicitudesTransp/', \CalificacionApi::class . ':Calificar');
 
     
-});
+// });
+
 
 
 $app->run();
