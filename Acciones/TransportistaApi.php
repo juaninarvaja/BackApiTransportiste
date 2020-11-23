@@ -64,7 +64,26 @@
            exit();
 
         }
+        public function HabilitarByEmail($request, $response, $args){
+            if(isset($_POST['mail'])){
+                $mail=$_POST['mail'];
+                $existe = TransportistaApi::TraerTransportPorMail($mail);
+                if($existe != "false" && $existe != null){
+                    $query = "UPDATE `transportistas` SET `habilitado`= 1 WHERE `email`= '$mail'";
+                    $resultado = metodoPut($query);
+                    echo json_encode($resultado);
+                    header("HTTP/1.1 200 OK");
+                    exit();
+                }
+                else {
+                    echo "no existe ese mail";
+                }
 
+            }
+            else {
+                echo "mandame mail";
+            } 
+         }
     }
     ?>
     
