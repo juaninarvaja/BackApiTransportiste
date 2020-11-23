@@ -45,6 +45,7 @@ $app->group('/transp', function () {
     $this->post('/mail/', \TransportistaApi::class . ':TraerPorMailPost');
     $this->post('/id/', \TransportistaApi::class . ':TraerPorIdPost');
     $this->post('/habilitar/', \TransportistaApi::class . ':HabilitarByEmail');
+    $this->post('/eliminar/', \TransportistaApi::class . ':EliminarByEmail');
     $this->get('/solicitudesTransp/', \TransportistaApi::class . ':TraerNoHabilitados');
     $this->post('/estaHabilitado/', \TransportistaApi::class . ':TraerEstadoByMail');
     // $this->put('/', \UsuariosApi::class . ':ActualizarUno');

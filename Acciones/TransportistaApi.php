@@ -121,6 +121,35 @@
                 echo "mandame mail";
             } 
          }
+         public function EliminarByEmail($request, $response, $args){
+            if(isset($_POST['mail'])){
+                $mail=$_POST['mail'];
+                $existe = TransportistaApi::TraerTransportPorMail($mail);
+                if($existe != "false" && $existe != null){
+                        //borro de esta tabla y de la de usuarios
+                        try{
+                            $query="DELETE FROM `transportistas` WHERE email ='$mail'";
+                            $resultado=metodoDelete($query);
+                            $query2="DELETE FROM `usuarios` WHERE email ='$mail'";
+                            $resultado=metodoDelete($query2);
+                            return true;
+                        }
+                        catch(Exception $e){
+                            echo $e;
+                        }
+    
+                }
+                else {
+                    echo "no existe ese mail";
+                }
+
+            }
+            else {
+                echo "mandame mail";
+            } 
+         }
+
+         
          
     }
     ?>
