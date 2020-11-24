@@ -132,7 +132,7 @@ class PedidosApi{
                 
                 echo json_encode($resultado);
                 //actualizer el array de pedidos de ese idCliente
-                ClienteApi::AgregarPedidoACliente($idCliente,$resultado["id"]);
+                //ClienteApi::AgregarPedidoACliente($idCliente,$resultado["id"]);
     
                 header("HTTP/1.1 200 OK");
                 exit();
