@@ -28,27 +28,36 @@ class CalificacionApi{
             $idTransportista = ViajeApi::getTransportistaByIdViaje((int)$idViaje);
             $estado =  ViajeApi::getEstadoByIdViaje((int)$idViaje);
            // echo $estado;
-            if($estado == "Finalizado"){
-              // echo "podes entrar pq esta en finalizado";
-              $existeya = CalificacionApi::existeCalificacionParaIdViaje($idViaje);
+           $existeya = CalificacionApi::existeCalificacionParaIdViaje($idViaje);
+            if($estado == "Recibido" && !$existeya){
 
-              //var_dump($existeya);
-               if($existeya){
-                  //echo "tengo q updatear";
-                  //update
-                  CalificacionApi::UpdateUna($idViaje,$idCliente,$idTransportista,$tipo,$calificacion);
+            //   $existeya = CalificacionApi::existeCalificacionParaIdViaje($idViaje);
+            //    if($existeya){
+            //       //echo "tengo q updatear";
+            //       //update
+            //       CalificacionApi::UpdateUna($idViaje,$idCliente,$idTransportista,$tipo,$calificacion);
                   
-                  //aca calculo el promedio nuevo y lo seteo
-               }else{
+            //       //aca calculo el promedio nuevo y lo seteo
+            //    }else{
                   //insert
                     CalificacionApi::SubirUna($idViaje,$idCliente,$idTransportista,$tipo,$calificacion);
                     //aca calculo el promedio nuevo y lo seteo
-                  }
+                  //}
 
                   
                }
+            else if($estado == "Calificado por Cliente"){
+               CalificacionApi::UpdateUna($idViaje,$idCliente,$idTransportista,$tipo,$calificacion,$estado);
+            }
+            else if($estado == "Calificado por Transportista"){
+               CalificacionApi::UpdateUna($idViaje,$idCliente,$idTransportista,$tipo,$calificacion,$estado);
+            }
+            else if($estado == "Finalizado"){
+               echo "el viaje ya esta finalizado, votaron las dos partes";
+            }      
             else{
-               echo "este pedido no esta finalizado";
+
+               echo "este Viaje no esta recibido o ya calificado o ya hay una votacion para ese viaje";
             }
 
          }
@@ -80,14 +89,18 @@ class CalificacionApi{
    }
 
    public function SubirUna($idViaje,$idCliente,$idTransportista,$tipo,$calificacion){
+      
       if($tipo == "cliente"){
-         
+        // echo "entro a subir una de cliente";
          $query="INSERT INTO `calificaciones`(`idViaje`, `puntuacionAlTransportista`, `idTransportista`, `idCliente`) VALUES ($idViaje,$calificacion,$idTransportista,$idCliente);";
          $queryAutoIncrement="select MAX(idAuth) as id from usuarios";
          $resultado=metodoPost($query,$queryAutoIncrement);
          $promedioT = CalificacionApi::calcularPromedioTransportista($idTransportista);
          TransportistaApi::setearCalificacionTransp($idTransportista,$promedioT);
-         echo json_encode($resultado);
+         
+         $cambioEstado = Viajeapi::CambiarEstadoByIdViaje($idViaje,"Calificado por Cliente");
+         //var_dump($cambioEstado);
+         echo json_encode($resultado) ;
          header("HTTP/1.1 200 OK");
          exit();
       }
@@ -97,37 +110,42 @@ class CalificacionApi{
          $resultado=metodoPost($query,$queryAutoIncrement);
          $promedioC = CalificacionApi::calcularPromedioCliente($idCliente);
          ClienteApi::setearCalificacionCliente($idCliente,$promedioC);
+         $cambioEstado = Viajeapi::CambiarEstadoByIdViaje($idViaje,"Calificado por Transportista");
          echo json_encode($resultado);
          header("HTTP/1.1 200 OK");
          exit();
       }
 
    }
-   public function UpdateUna($idViaje,$idCliente,$idTransportista,$tipo,$calificacion){
-      if($tipo == "cliente"){
+   public function UpdateUna($idViaje,$idCliente,$idTransportista,$tipo,$calificacion,$estadoActual){
+      if($tipo == "cliente" && $estadoActual == "Calificado por Transportista"){
+
         $query = "UPDATE `calificaciones` SET `puntuacionAlTransportista`= $calificacion WHERE idViaje = $idViaje";
         // $query="INSERT INTO `calificaciones`(`idViaje`, `puntuacionAlTransportista`, `idTransportista`, `idCliente`) VALUES ($idViaje,$calificacion,$idTransportista,$idCliente);";
         $resultado = metodoPut($query);
         $promedioT = CalificacionApi::calcularPromedioTransportista($idTransportista);
         TransportistaApi::setearCalificacionTransp($idTransportista,$promedioT);
-      
+        $cambioEstado = Viajeapi::CambiarEstadoByIdViaje($idViaje,"Finalizado");
         echo json_encode($resultado);
         header("HTTP/1.1 200 OK");
 
         exit();
       }
-      else if ($tipo == "transportista"){
+      else if ($tipo == "transportista" && $estadoActual == "Calificado por Cliente" ){
          $query = "UPDATE `calificaciones` SET `puntuacionAlCliente`= $calificacion WHERE idViaje = $idViaje";
          // $query="INSERT INTO `calificaciones`(`idViaje`, `puntuacionAlTransportista`, `idTransportista`, `idCliente`) VALUES ($idViaje,$calificacion,$idTransportista,$idCliente);";
          $resultado = metodoPut($query);
          $promedioC = CalificacionApi::calcularPromedioCliente($idCliente);
           ClienteApi::setearCalificacionCliente($idCliente,$promedioC);
-        
+          $cambioEstado = Viajeapi::CambiarEstadoByIdViaje($idViaje,"Finalizado");
        
 
          echo json_encode($resultado);
          header("HTTP/1.1 200 OK");
          exit();
+      }
+      else{
+         echo "ya votaste tomatela";
       }
 
    }

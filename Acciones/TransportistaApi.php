@@ -59,8 +59,8 @@
              
            $query = "UPDATE `transportistas` SET `calificacion`= $calif WHERE `idTransportista`= $idTransp";
            $resultado = metodoPut($query);
-           echo json_encode($resultado);
-           header("HTTP/1.1 200 OK");
+            return json_encode($resultado);
+          // header("HTTP/1.1 200 OK");
            exit();
 
         }

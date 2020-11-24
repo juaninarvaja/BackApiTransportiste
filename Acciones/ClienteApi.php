@@ -135,8 +135,8 @@
              
             $query = "UPDATE `clientes` SET `calificacion`= $calif WHERE `id`= $idCliente";
             $resultado = metodoPut($query);
-            echo json_encode($resultado);
-            header("HTTP/1.1 200 OK");
+            return json_encode($resultado);
+            //header("HTTP/1.1 200 OK");
             exit();
  
          }

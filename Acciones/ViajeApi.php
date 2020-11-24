@@ -309,6 +309,22 @@ class ViajeApi{
             }
 
     }
+
+    public function CambiarEstadoByIdViaje($idViaje, $estado){
+
+                if(ViajeApi::existeViaje($idViaje)){
+                    $query2 = "UPDATE `viajes` SET `estado`= '$estado'  WHERE idViaje = $idViaje"; 
+                    $resultado2 =  metodoPut($query2);
+                    header("HTTP/1.1 200 OK");
+                    return json_encode($resultado2);
+                }
+                else{
+                    return false;
+                    //echo "ese viaje no existe";
+                }
+        
+
+    }
     public function cancelarViaje($request, $response, $args){
         if(isset($_POST['idViaje']) && isset($_POST['tipo'])){
              $idViaje=$_POST['idViaje'];
