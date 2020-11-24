@@ -43,6 +43,10 @@ class ViajeApi{
                      $DireccionDestino = json_decode(Direcciones::TraerDireccionById($array[$i]["infoPedido"]["DireccionLlegada"]),true);
                      $array[$i]["DireccionOrigen"] =   $DireccionOrigen ;
                      $array[$i]["DireccionLlegada"] =  $DireccionDestino;
+
+                     $idCliente= $infoPedido["idCliente"];
+                     $idCliente = json_decode(ClienteApi::TraerClientePorId($idCliente),true);
+                     $array[$i]["infoCliente"] = $idCliente;
                     // TraerUnobyIdPedido
                      // echo $infoTransp;
                     // var_dump ($array);
