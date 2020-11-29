@@ -35,7 +35,7 @@
             }
         }
         public function TraerNoHabilitados($request, $response, $args) {
-            $query="SELECT * FROM `transportistas` WHERE habilitado = 0";
+            $query="SELECT * FROM `transportistas` WHERE habilitado = 0 OR habilitado = -1";
                 
             $resultado = metodoGet($query);
             
