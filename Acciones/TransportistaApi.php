@@ -88,7 +88,7 @@
 
                 // $existe = TransportistaApi::TraerTransportPorMail($mail);
                 // if($existe != "false" && $existe != null){
-                    $query = "UPDATE `transportistas` SET `habilitado`= 0 WHERE `idTransportista`= $idTransp";
+                    $query = "UPDATE `transportistas` SET `habilitado`= -1 WHERE `idTransportista`= $idTransp";
                     $resultado = metodoPut($query);
                     return json_encode($resultado);
                     // header("HTTP/1.1 200 OK");

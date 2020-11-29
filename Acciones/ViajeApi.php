@@ -205,11 +205,16 @@ class ViajeApi{
                     $JsonRta = json_encode($resultado->fetchAll());
         
                     $array = json_decode($JsonRta,true);
-            
+                    $auxArray = [];
                    
                     for($i = 0;$i<count($array);$i++){
-                        // var_dump((int)$array[$i]["idTransportista"]);
-                        if(isset($array[$i]["idPedido"])){
+                         //var_dump($array[$i]["estado"]);
+                        if($array[$i]["estado"] == "Finalizado" || $array[$i]["estado"] == "Cancelado por Transportista" || $array[$i]["estado"] == "Cancelado por Cliente"){
+                           //echo "entro";
+                            //unset($array[$i]);
+                            //var_dump($array);
+                        }
+                        else if(isset($array[$i]["idPedido"])){
         
         
                              $idPedido= $array[$i]["idPedido"];
@@ -229,7 +234,7 @@ class ViajeApi{
                              $DireccionDestino = json_decode(Direcciones::TraerDireccionById($array[$i]["infoPedido"]["DireccionLlegada"]),true);
                              $array[$i]["DireccionOrigen"] =   $DireccionOrigen ;
                              $array[$i]["DireccionLlegada"] =  $DireccionDestino;
-        
+                            $auxArray[$i] = $array[$i];
                              
                         }
                         // echo "llego aca";
@@ -237,9 +242,12 @@ class ViajeApi{
                        
         
                     }
-                    $respuesta =json_encode($array,true);
+                    //var_dump($auxArray);
+                    $respuesta =json_encode($auxArray,true);
+                    // header("HTTP/1.1 200 OK");
+                    // $respuesta =json_encode($array,true);
                     header("HTTP/1.1 200 OK");
-                    return $respuesta;
+                   return $respuesta;
                 }
                 }
             
