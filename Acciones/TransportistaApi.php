@@ -72,6 +72,10 @@
                     $query = "UPDATE `transportistas` SET `habilitado`= 1 WHERE `email`= '$mail'";
                     $resultado = metodoPut($query);
                     echo json_encode($resultado);
+                    if(StrikesApi::cuantoStrikeTieneMail($mail) > 0){
+                        StrikesApi::deleteAllStrikes($mail);
+                    }
+                   
                     header("HTTP/1.1 200 OK");
                     exit();
                 }

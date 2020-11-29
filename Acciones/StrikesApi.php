@@ -29,6 +29,25 @@ class StrikesApi{
         // return $rtaArray;
     
     }
+    function cuantoStrikeTieneMail($mail){
+        $auxTransp= TransportistaApi::TraerTransportPorMail($mail);
+        //var_dump($auxTransp);
+        if($auxTransp != "false"){
+            $array = json_decode($auxTransp,true);
+            $idTransp = (int)$array["idTransportista"];
+        $query="SELECT * FROM `strikes` WHERE idTransportista = $idTransp";
+
+        $resultado = metodoGet($query);
+       // header("HTTP/1.1 200 OK");
+      
+        $rta = json_encode($resultado->fetchAll());
+        $array = json_decode($rta,true);
+        return count($array);
+       // $rtaArray = json_decode($rta);
+       // return $rtaArray;
+        }
+        else return 0;
+   }
     function subirStrike($idTransportista,$idViaje){
         
         $query="INSERT INTO `strikes`(`idTransportista`, `idViaje`) VALUES ($idTransportista,$idViaje)";
@@ -38,6 +57,20 @@ class StrikesApi{
       
       return json_encode($resultado);
     
+    }
+    function deleteAllStrikes($mail){
+        $auxTransp= TransportistaApi::TraerTransportPorMail($mail);
+        //var_dump($auxTransp);
+        if($auxTransp != "false"){
+            $array = json_decode($auxTransp,true);
+            $idTransp = (int)$array["idTransportista"];
+        $query="DELETE FROM `strikes` WHERE idTransportista = $idTransp";
+      //   echo $query;
+      $resultado=metodoDelete($query);
+      return $resultado;
+      
+      //return json_encode($resultado);
+        }    
     }
     function cantidadPorMail($request, $response, $args){
         
@@ -70,7 +103,7 @@ class StrikesApi{
         else{
             echo "no me llega el mail";
         }
-   }
+   } 
     
 
 }   
